@@ -13,6 +13,9 @@ nav {
 .logo {
     margin: 0 10px 0 0;
     font-family: "Space Grotesk", sans-serif;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
 }
 
 #search-bar {
