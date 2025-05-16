@@ -32,7 +32,7 @@ nav {
     gap: 10px;
 }
 
-#log-in-button, #sign-up-button {
+#write-button, #log-in-button, #sign-up-button {
     padding: 5px 10px;
     margin: 0;
 }
@@ -64,7 +64,7 @@ nav {
         gap: 5px;
     }
     
-    #log-in-button, #sign-up-button {
+    #write-button, #log-in-button, #sign-up-button {
         padding: 3px 6px;
         font-size: 0.8em;
     }
@@ -84,7 +84,7 @@ nav {
         font-size: 0.8em;
     }
     
-    #log-in-button, #sign-up-button {
+    #write-button, #log-in-button, #sign-up-button {
         padding: 2px 5px;
         font-size: 0.7em;
     }
