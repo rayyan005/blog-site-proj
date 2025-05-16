@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gloock&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <h3 class="logo">the blog site</h3>
+            <input type="search" placeholder="Search for a blog" id="search-bar" />
+            <div class="nav-buttons">
+                <button type="button" id="log-in-button">LOG IN</button>
+                <button type="button" id="sign-up-button">SIGN UP</button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+
+        <div class="hero-section">
+
+            <div class="login-section-container">
+                <div class="login-section-content">
+                    <h1>the blog site</h1>
+                    <h2>Login</h2>
+                    <form id="login-form">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="username" required>
+
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" required>
+                        
+                        <p class="create-account-text">Don't have an account? <a href="/register.html">Create One</a></p>
+                        
+                        <button type="submit">Login</button>
+                    </form>
+                </div>
+            </div>
+
+
+            <div class="image-section-container">
+                <img src="/mock-data/Hero.webp" alt="truck on ice road" />
+            </div>
+        </div>
+        
+    </main>
+</body>
+</html>

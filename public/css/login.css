@@ -1,0 +1,116 @@
+body {
+    margin: 0;
+}
+
+/* Remove navigation styling as it's moved to header.css */
+
+button {
+    background-color: #0065F3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.hero-section {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    height: calc(100vh - 50px); /* Subtract nav height from viewport height */
+    overflow: hidden; /* Prevent content from overflowing */
+}
+
+.login-section-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.login-section-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    margin-top: -40px; /* Move content upward */
+}
+
+#login-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+#login-form label {
+    text-align: left;
+    font-family: "Inter", sans-serif;
+    margin-bottom: -5px; /* Reduce space between label and input */
+}
+
+#login-form input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+#login-form button {
+    padding: 10px;
+    margin-top: 10px;
+    font-family: "Inter", sans-serif;
+    width: 50%; /* Reduce button width */
+    align-self: center; /* Center the button */
+}
+
+.create-account-text {
+    font-size: 0.9em;
+    margin: 10px 0 0 0;
+    color: #555;
+    font-family: "Inter", sans-serif;
+}
+
+.create-account-text a {
+    color: #0065F3;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.create-account-text a:hover {
+    text-decoration: underline;
+}
+
+.image-section-container {
+    overflow: hidden;
+    height: 100%;
+}
+
+.image-section-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Add responsive styling */
+@media screen and (max-width: 768px) {
+    .hero-section {
+        grid-template-columns: 1fr;
+    }
+    
+    .image-section-container {
+        display: none; /* Hide image on smaller screens */
+    }
+    
+    .login-section-container {
+        height: calc(100vh - 100px); /* Adjust for taller nav on mobile */
+    }
+
+    /* Navigation adjustments are now in header.css */
+}
+
+@media screen and (max-width: 480px) {
+    /* Navigation styles for small screens are now in header.css */
+}
