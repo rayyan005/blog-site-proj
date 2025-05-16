@@ -2,39 +2,7 @@ body {
     margin: 0;
 }
 
-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    height: 50px;
-    padding: 0 20px;
-    box-sizing: border-box;
-    border-bottom: 1px solid #ccc;
-}
-
-.logo {
-    margin: 0 10px 0 0;
-}
-
-#search-bar {
-    width: 35%;
-    height: 80%;
-    border: 2px solid #000000;
-    border-radius: 5px;
-    margin: 0 10px;
-    padding: 0 8px;
-}
-
-.nav-buttons {
-    display: flex;
-    gap: 10px;
-}
-
-#log-in-button, #sign-up-button {
-    padding: 5px 10px;
-    margin: 0;
-}
+/* Remove navigation styling as it's moved to header.css */
 
 .hero-section, .recent-section {
     padding-left: 1.5vw;
@@ -288,28 +256,9 @@ img {
 
 /* Add a media query section for responsiveness */
 @media screen and (max-width: 768px) {
-    /* Navigation adjustments */
-    nav {
-        flex-direction: column;
-        height: auto;
-        padding: 10px;
-    }
+    /* Navigation adjustments are now in header.css */
     
-    .logo {
-        margin-bottom: 10px;
-    }
-    
-    #search-bar {
-        width: 100%;
-        margin: 10px 0;
-    }
-    
-    .nav-buttons {
-        width: 100%;
-        justify-content: center;
-    }
-    
-    /* Hero section adjustments */
+    /* Rest of mobile styles */
     .hero-section {
         grid: 1fr auto / 1fr;
         padding: 0 10px;
@@ -375,6 +324,8 @@ img {
     .left-section .date {
         bottom: 10px;
     }
+    
+    /* Navigation styles for small screens are now in header.css */
 }
 
 /* Footer Styles - Simplified */
