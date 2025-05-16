@@ -1,0 +1,456 @@
+body {
+    margin: 0;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    padding: 0 20px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #ccc;
+}
+
+.logo {
+    margin: 0 10px 0 0;
+}
+
+#search-bar {
+    width: 35%;
+    height: 80%;
+    border: 2px solid #000000;
+    border-radius: 5px;
+    margin: 0 10px;
+    padding: 0 8px;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+#log-in-button, #sign-up-button {
+    padding: 5px 10px;
+    margin: 0;
+}
+
+.hero-section, .recent-section {
+    padding-left: 1.5vw;
+    padding-right: 1.5vw;
+}
+
+h1 {
+    text-align: center;
+    margin: 20px 0 5px 0;
+    font-size: 3em;
+    font-family: "Geist", sans-serif; 
+}
+
+/* Add styling for horizontal rule instead */
+hr {
+    width: 95%;
+    border: 1px solid black;
+    margin: 10px auto;
+}
+
+h2 {
+    font-family: "Gloock", serif;
+    font-weight: 300;
+}
+
+p {
+    font-family: "Inter", sans-serif;
+}
+
+h3 {
+    font-family: "Space Grotesk", sans-serif;
+}
+
+h3:hover {
+    text-decoration: underline;
+    cursor: pointer;
+    color:#0065F3;
+}
+
+button {
+    background-color: #0065F3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+img {
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.hero-section {
+    display: grid;
+    grid: 1fr / 0.75fr 1fr;
+    gap: 20px;
+    padding: 0 20px;
+    margin: 20px 0;
+}
+
+.left-section {
+    grid-column: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative; /* Add position relative to contain absolute children */
+}
+
+.left-section img {
+    width: 100%; /* Changed to 100% for full width */
+    height: 100%; /* Changed to 100% for full height */
+    object-fit: cover;
+    display: block; /* Remove any extra space below image */
+}
+
+.left-section .blog-title,
+.left-section .author,
+.left-section .date {
+    position: absolute;
+    left: 20px;
+    color: white; /* Make text visible against potentially dark images */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); /* Add shadow for legibility */
+}
+
+.left-section .blog-title {
+    bottom: 80px; /* Position from bottom of container */
+    margin: 0;
+    max-width: 80%;
+}
+
+.left-section .author {
+    bottom: 40px;
+    margin: 0;
+}
+
+.left-section .date {
+    bottom: 15px;
+    margin: 0;
+}
+
+.right-section {
+    grid-column: 2;
+    display: grid;
+    gap: 15px;
+    height: 100%; /* Match height of left section */
+}
+
+.top-blog, .middle-blog, .bottom-blog {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 10px;
+    align-items: center;
+    height: calc((10% - 30px) / 3); /* Equal height for each blog item (accounting for gaps) */
+}
+
+.top-blog img, .middle-blog img, .bottom-blog img {
+    width: 100%;
+    height: 100%; /* Make all images same height */
+    object-fit: cover;
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    aspect-ratio: 16/9; /* Maintain consistent aspect ratio */
+}
+
+.top-blog .blog-title, .middle-blog .blog-title, .bottom-blog .blog-title {
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0 0 3px 0; /* Reduce bottom margin */
+}
+
+.top-blog .author, .middle-blog .author, .bottom-blog .author {
+    grid-column: 1;
+    grid-row: 2;
+    margin: 0 0 3px 0; /* Reduce margins above and below */
+}
+
+.top-blog .date, .middle-blog .date, .bottom-blog .date {
+    grid-column: 1;
+    grid-row: 3;
+    margin: 0; /* Already minimal */
+}
+
+.blog-title {
+    margin: 10px 0 5px 0;
+}
+
+.author, .date {
+    margin: 3px 0;
+}
+
+.featured-section-row {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    border-top: 4px solid #000;
+    border-bottom: 4px solid #000;
+    margin: 40px 0;
+}
+
+.featured-content-container {
+    padding: 20px;
+    border-left: 1px solid #ccc;
+}
+
+/* Styling for the featured heading container */
+#featured-heading {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#featured-heading .title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+/* Override hover effects for the featured title */
+#featured-heading h3:hover {
+    text-decoration: none;
+    cursor: default;
+    color: inherit;
+}
+
+.arrow-container {
+    display: flex;
+    align-items: center;
+}
+
+.arrow-right {
+    font-size: 3.5em;
+    font-weight: bold;
+}
+
+.recent-title-container {
+    padding-left: 1.5vw;
+    padding-right: 1.5vw;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.recent-title-container::after {
+    content: '';
+    display: block;
+    width: calc(100% - 3vw); /* Width minus left and right padding */
+    height: 1px;
+    background-color: #000;
+    position: absolute;
+    bottom: 0;
+    left: 1.5vw;
+}
+
+/* Remove the direct border */
+.recent-title-container {
+    border-bottom: none;
+}
+
+.recent-section {
+    max-width: calc(100% - 3vw); /* Match the width of the recent heading's bottom border */
+    margin: 0 auto; /* Center the section */
+}
+
+.recent-content-container {
+    display: flex;
+    flex-direction: row-reverse;
+    width: 100%;
+    margin-bottom: 20px; /* Add spacing between items */
+    border-bottom: 1px solid #ccc; /* Add a bottom border for separation */
+    padding-bottom: 20px; /* Add padding for spacing */
+}
+
+.recent-content-container .image-container {
+    width: 30%; /* Adjust as needed */
+    padding-left: 15px; /* Space between image and text */
+}
+
+.recent-content-container .image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.recent-content-container .content {
+    width: 70%; /* Adjust as needed */
+}
+
+.load-more-button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+}
+
+/* Add a media query section for responsiveness */
+@media screen and (max-width: 768px) {
+    /* Navigation adjustments */
+    nav {
+        flex-direction: column;
+        height: auto;
+        padding: 10px;
+    }
+    
+    .logo {
+        margin-bottom: 10px;
+    }
+    
+    #search-bar {
+        width: 100%;
+        margin: 10px 0;
+    }
+    
+    .nav-buttons {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    /* Hero section adjustments */
+    .hero-section {
+        grid: 1fr auto / 1fr;
+        padding: 0 10px;
+    }
+    
+    .left-section, .right-section {
+        grid-column: 1;
+        width: 100%;
+    }
+    
+    .left-section {
+        grid-row: 1;
+        margin-bottom: 20px;
+    }
+    
+    .right-section {
+        grid-row: 2;
+        gap: 30px;
+    }
+    
+    /* Featured section adjustments */
+    .featured-section-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .featured-content-container {
+        border-left: none;
+        border-bottom: 1px solid #ccc;
+    }
+    
+    /* Recent section adjustments */
+    .recent-content-container {
+        flex-direction: column;
+    }
+    
+    .recent-content-container .image-container {
+        width: 100%;
+        padding-left: 0;
+        margin-bottom: 10px;
+    }
+    
+    .recent-content-container .content {
+        width: 100%;
+    }
+}
+
+/* Add another breakpoint for smaller screens */
+@media screen and (max-width: 480px) {
+    h1 {
+        font-size: 2em;
+    }
+    
+    .left-section .blog-title {
+        bottom: 60px;
+        max-width: 90%;
+        font-size: 1em;
+    }
+    
+    .left-section .author {
+        bottom: 30px;
+    }
+    
+    .left-section .date {
+        bottom: 10px;
+    }
+}
+
+/* Footer Styles - Simplified */
+footer {
+    background-color: #f5f5f5;
+    padding: 30px 0 15px;
+    margin-top: 60px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.footer-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    max-width: calc(100% - 3vw);
+    margin: 0 auto;
+    padding: 0 1.5vw;
+    text-align: center; /* Center the text in the footer container */
+}
+
+.footer-section h4 {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 1.2em;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: inline-block; /* Help with centering the list items */
+    text-align: left; /* Optional: keep text left-aligned within the centered list */
+}
+
+.footer-section ul li {
+    margin-bottom: 8px;
+}
+
+.footer-section a {
+    text-decoration: none;
+    color: #555;
+    font-family: "Inter", sans-serif;
+    transition: color 0.2s;
+}
+
+.footer-section a:hover {
+    color: #0065F3;
+}
+
+.social-links {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.social-icon {
+    padding: 5px 10px;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+}
+
+.footer-bottom {
+    max-width: calc(100% - 3vw);
+    margin: 20px auto 0;
+    padding: 15px 1.5vw 0;
+    border-top: 1px solid #e0e0e0;
+    text-align: center;
+    font-size: 0.9em;
+    color: #777;
+    line-height: 1.5;
+}
+
+/* Footer responsive styles */
+@media screen and (max-width: 480px) {
+    .footer-container {
+        grid-template-columns: 1fr;
+    }
+}
