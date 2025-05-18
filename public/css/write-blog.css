@@ -170,7 +170,70 @@ button {
     background-color: #0057D0;
 }
 
-/* Footer styling is inherited from index.css */
+/* Login message styling */
+.login-message-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+    padding: 20px;
+}
+
+.login-message {
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+}
+
+.login-message h2 {
+    font-family: "Space Grotesk", sans-serif;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.login-message p {
+    font-family: "Inter", sans-serif;
+    margin-bottom: 30px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.login-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.login-btn, .register-btn {
+    display: inline-block;
+    padding: 10px 25px;
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.login-btn {
+    background-color: #000;
+    color: #fff;
+    border: 2px solid #000;
+}
+
+.register-btn {
+    background-color: #fff;
+    color: #000;
+    border: 2px solid #000;
+}
+
+.login-btn:hover, .register-btn:hover {
+    opacity: 0.85;
+}
 
 /* Responsive styling */
 @media screen and (max-width: 768px) {
@@ -184,6 +247,19 @@ button {
     
     .toolbar {
         flex-wrap: wrap;
+    }
+    
+    .login-message {
+        padding: 30px;
+    }
+    
+    .login-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .login-btn, .register-btn {
+        width: 100%;
     }
 }
 
