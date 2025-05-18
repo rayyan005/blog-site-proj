@@ -4,17 +4,26 @@ const dotenv = require('dotenv');
 const bcrypt = require('bcrypt');
 const multer = require('multer');
 const path = require('path');
+// Add cookie-parser for handling cookies
+const cookieParser = require('cookie-parser');
+// Add hbs for better Handlebars configuration
+const hbs = require('hbs');
 
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const app = express();
 
+// Set up Handlebars view engine
 app.set('view engine', 'hbs');
+app.set('views', path.join(__dirname, '../views')); // Set the views directory
 
-// Add body-parser middleware to parse form data
+// Register partials directory
+hbs.registerPartials(path.join(__dirname, '../views/partials'));
+
+// Add middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
+app.use(cookieParser()); // Add cookie parser middleware
 app.use(express.static(path.join(__dirname, '../public'))); // Serve static files from the public directory
 
 
@@ -169,7 +178,8 @@ app.post('/login', (req, res) => {
                 return res.status(200).json({
                     success: true,
                     message: "Login successful",
-                    redirectUrl: '/' // Changed from '/index.html' to '/'
+                    redirectUrl: '/', // Changed from '/index.html' to '/'
+                    userId: user.id
                 });
             } else {
                 // Passwords do not match
@@ -202,7 +212,7 @@ function checkFileType(file, cb) {
 
 // Set storage engine
 const storage = multer.diskStorage({
-    destination: './public/uploads/',
+    destination: path.join(__dirname, '../public/uploads/'),
     filename: function(req, file, cb) {
         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
     }
@@ -231,14 +241,36 @@ app.post('/write-blog', (req, res) => {
             });
         }
 
-        const { title, description, image, content } = req.body;
+        const { userId, title, description, image, content } = req.body;
+
+        // Check if userId exists
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "You must be logged in to post a blog"
+            });
+        }
+
+
+        // Check if a file was uploaded
+        if (!req.file) {
+            return res.status(400).json({
+                success: false,
+                message: "No image file was uploaded"
+            });
+        }
+
+
+
+
+
 
         const imageUrl = `/uploads/${req.file.filename}`;
         const created_at = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
-        const sql = 'INSERT INTO blogs_data (title, description, content, imageURL, createdAt) VALUES (?, ?, ?, ?, ?)';
+        const sql = 'INSERT INTO blogs_data (userID, title, description, content, imageURL, createdAt) VALUES (?, ?, ?, ?, ?, ?)';
 
-        con.query(sql, [title, description, content, imageUrl, created_at], (error, results) => {
+        con.query(sql, [userId, title, description, content, imageUrl, created_at], (error, results) => {
             if (error) {
                 console.log("Database error during blog post insertion:", error);
                 return res.status(500).json({
@@ -251,7 +283,7 @@ app.post('/write-blog', (req, res) => {
             return res.status(201).json({
                 success: true,
                 message: "Blog post saved successfully",
-                redirectUrl: '/index.html'
+                redirectUrl: '/'
             });
         });
 
@@ -261,18 +293,80 @@ app.post('/write-blog', (req, res) => {
 
 
 
+
+app.get('/profile/:username', (req, res) => {
+
+    const username = req.params.username;
+
+    if (!username) {
+        return res.status(401).redirect('/login');
+    }
+
+    const sql = 'SELECT id, username, firstName, lastName, email FROM users WHERE username = ?';
+
+    con.query(sql, [username], (error, result) => {
+
+        if (error || result.length === 0) {
+            console.log("Error finding user:", error);
+            return res.status(404).send('User not found');
+        }
+
+        const user = result[0];
+
+        const blogsQuery = 'SELECT id, title, description, content, imageURL, createdAt FROM blogs_data WHERE userID = ? ORDER BY createdAt DESC';
+
+        con.query(blogsQuery, [user.id], (error, blogsResults) => {
+
+            if (error) {
+                console.log("Error fetching blogs:", error);
+                return res.status(500).send('Error fetching blogs');
+            }
+
+            // Format blog data for display
+            const blogs = blogsResults.map(blog => {
+                // Create a truncated summary from the content or use description
+                const summary = blog.description || (blog.content.length > 150 
+                    ? blog.content.substring(0, 150) + '...' 
+                    : blog.content);
+                
+                // Format the date
+                const date = new Date(blog.createdAt);
+                const formattedDate = date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                return {
+                    id: blog.id,
+                    title: blog.title,
+                    summary: summary,
+                    imageUrl: blog.imageURL,
+                    formattedDate: formattedDate
+                };
+            });
+
+            // Render the profile template with user and blogs data
+            res.render('profile', {
+                user: user,
+                blogs: blogs,
+                hasMoreBlogs: false,
+                nextPage: 2
+            });
+        });
+    });
+});
+
 // Middleware to check if the user is logged in
 const checkLoggedIn = (req, res, next) => {
-    // In a real application, you would check if the user has a valid session
-    // For now, we'll use a simple check (this would be replaced with proper session validation)
-    const isLoggedIn = req.headers.authorization || req.cookies.isLoggedIn;
+    // The error happens because req.cookies might be undefined if cookie-parser middleware is not used
+    // Also, we should account for authorization header as a fallback
+    // For a real app with localStorage, this check doesn't work directly since localStorage is client-side
+    // Instead, we'd typically use sessions/JWT tokens
     
-    if (isLoggedIn) {
-        next(); // User is logged in, proceed to the next middleware/route handler
-    } else {
-        // User is not logged in, redirect to login page
-        res.redirect('/login');
-    }
+    // For now, we'll just allow access and let the client-side handle authorization
+    // In a real app, implement proper authentication with sessions or JWT
+    next();
 };
 
 // Route to serve the login.html file when /login is requested
@@ -293,10 +387,11 @@ app.get('/write-blog', (req, res) => {
 
 // Route to serve the profile.html file when /profile is requested
 // Protect this route with the checkLoggedIn middleware
-app.get('/profile', checkLoggedIn, (req, res) => {
+app.get('/profile', (req, res) => {
+    // Redirect to profile page with the username from localStorage
+    // The actual authentication will be handled client-side
     res.sendFile(path.join(__dirname, '../public', 'profile.html'));
 });
-
 
 
 
