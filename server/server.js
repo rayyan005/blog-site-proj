@@ -495,6 +495,134 @@ function formatBlogContent(content) {
     return paragraphs.map(p => `<p>${p.replace(/\r?\n/g, '<br>')}</p>`).join('');
 }
 
+
+
+
+app.post('/comments', (req, res) => {
+
+    const { userId, blogId, comment } = req.body;
+
+    // Check if userId exists
+    if (!userId) {
+        return res.status(401).json({
+            success: false,
+            message: "You must be logged in to post a comment"
+        });
+    }
+
+
+    // Create timestamp for the new comment
+    const createdAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+
+    const sql = 'INSERT INTO comments_data (userID, blogID, comment, createdAt) VALUES (?, ?, ?, ?)';
+
+    con.query(sql, [userId, blogId, comment, createdAt], (error, results) => {
+        if (error) {
+            console.log("Database error during comment insertion:", error);
+            return res.status(500).json({
+                success: false,
+                message: "Error saving comment"
+            });
+        }
+
+        console.log("Comment saved successfully with ID:", results.insertId);
+        return res.status(201).json({
+            success: true,
+            message: "Comment saved successfully"
+        });
+    });
+});
+
+
+
+// Add this route to your server.js to fetch comments for a blog post
+app.get('/api/comments/:blogId', (req, res) => {
+    const blogId = req.params.blogId;
+    
+    const sql = `
+        SELECT c.id, c.comment, c.createdAt, c.userID,
+               u.username, u.firstName, u.lastName
+        FROM comments_data c
+        JOIN users u ON c.userID = u.id
+        WHERE c.blogID = ?
+        ORDER BY c.createdAt DESC`;
+    
+    con.query(sql, [blogId], (error, results) => {
+        if (error) {
+            console.log("Error fetching comments:", error);
+            return res.status(500).json({
+                success: false,
+                message: "Error retrieving comments"
+            });
+        }
+        
+        // Format the comments for the frontend
+        const comments = results.map(comment => {
+            const date = new Date(comment.createdAt);
+            return {
+                id: comment.id,
+                username: comment.username,
+                authorName: `${comment.firstName} ${comment.lastName}`,
+                comment: comment.comment,
+                createdAt: date.toLocaleString(),
+                userId: comment.userID
+            };
+        });
+        
+        return res.status(200).json({
+            success: true,
+            comments: comments
+        });
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const port = 3000; // Port for the server to listen on
 
 app.listen(port, () => {
