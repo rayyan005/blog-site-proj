@@ -155,6 +155,34 @@ main {
     background-color: #0057D0;
 }
 
+/* Blog item link styling */
+.blog-link {
+    display: flex;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease;
+}
+
+.blog-link:hover {
+    transform: translateY(-3px);
+}
+
+.blog-item {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+    transition: box-shadow 0.3s ease;
+}
+
+.blog-item:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Ensure the title only gets the blue color on hover, not the whole container */
+.blog-link:hover .blog-title {
+    color: #0065F3;
+}
+
 /* Responsive design */
 @media screen and (max-width: 900px) {
     .profile-container {
