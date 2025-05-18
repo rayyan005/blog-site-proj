@@ -393,8 +393,107 @@ app.get('/profile', (req, res) => {
     res.sendFile(path.join(__dirname, '../public', 'profile.html'));
 });
 
+// Route to handle individual blog posts by title (URL-safe slug)
+app.get('/blog/:slug', (req, res) => {
+    const slug = req.params.slug;
+    
+    // Query to find blog by slug
+    const sql = `
+        SELECT b.id, b.title, b.description, b.content, b.imageURL, b.createdAt, 
+               u.username, u.firstName, u.lastName 
+        FROM blogs_data b
+        JOIN users u ON b.userID = u.id
+        WHERE LOWER(REPLACE(REPLACE(b.title, ' ', '-'), ',', '')) = ?`;
+    
+    con.query(sql, [slug.toLowerCase()], (error, results) => {
+        if (error) {
+            console.log("Error fetching blog:", error);
+            return res.status(500).send('Database error');
+        }
+        
+        if (results.length === 0) {
+            return res.status(404).render('blog-post', {
+                error: true,
+                message: 'Blog post not found'
+            });
+        }
+        
+        const blog = results[0];
+        
+        // Format the date
+        const date = new Date(blog.createdAt);
+        const formattedDate = date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        
+        // Create an author display name
+        const authorName = `${blog.firstName} ${blog.lastName}`;
+        
+        // Prepare the blog data for the template
+        const blogData = {
+            id: blog.id,
+            title: blog.title,
+            description: blog.description,
+            content: formatBlogContent(blog.content), // Format the content as HTML
+            imageUrl: blog.imageURL,
+            date: formattedDate,
+            author: authorName,
+            username: blog.username
+        };
+        
+        // Render the Handlebars template with the blog data
+        res.render('blog-post', { 
+            blog: blogData,
+            pageTitle: blog.title + ' - the blog site'
+        });
+    });
+});
 
+// Route to handle blog post access by ID
+app.get('/blog-post/:id', (req, res) => {
+    const blogId = req.params.id;
+    
+    // Query to find blog by ID
+    const sql = `
+        SELECT b.id, b.title, b.description, b.content, b.imageURL, b.createdAt, 
+               u.username, u.firstName, u.lastName 
+        FROM blogs_data b
+        JOIN users u ON b.userID = u.id
+        WHERE b.id = ?`;
+    
+    con.query(sql, [blogId], (error, results) => {
+        if (error) {
+            console.log("Error fetching blog:", error);
+            return res.status(500).send('Database error');
+        }
+        
+        if (results.length === 0) {
+            return res.status(404).render('blog-post', {
+                error: true,
+                message: 'Blog post not found'
+            });
+        }
+        
+        const blog = results[0];
+        
+        // Create a URL-friendly slug from the title
+        const slug = blog.title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
+        
+        // Redirect to the slug-based URL for better SEO
+        return res.redirect(`/blog/${slug}`);
+    });
+});
 
+// Helper function to convert plain text with line breaks to HTML paragraphs
+function formatBlogContent(content) {
+    if (!content) return '';
+    
+    // Split content by line breaks and wrap each paragraph in <p> tags
+    const paragraphs = content.split(/\r?\n\r?\n/);
+    return paragraphs.map(p => `<p>${p.replace(/\r?\n/g, '<br>')}</p>`).join('');
+}
 
 const port = 3000; // Port for the server to listen on
 
