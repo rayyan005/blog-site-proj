@@ -1,0 +1,308 @@
+const express = require('express');
+const mysql = require('mysql');
+const dotenv = require('dotenv');
+const bcrypt = require('bcrypt');
+const multer = require('multer');
+const path = require('path');
+
+dotenv.config({ path: path.join(__dirname, '../.env') });
+
+const app = express();
+
+app.set('view engine', 'hbs');
+
+// Add body-parser middleware to parse form data
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.use(express.static(path.join(__dirname, '../public'))); // Serve static files from the public directory
+
+
+// Route to serve the index.html file
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public', 'index.html'));
+});
+
+
+// Create a connection to the database
+const con = mysql.createConnection({
+    host: process.env.DATABASE_HOST,
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    database: process.env.DATABASE_NAME,
+});
+
+// Connect to the database
+con.connect((err) => {
+    if (err) {
+        console.error('Error connecting to the database:', err);
+        return;
+    }
+    console.log('Connected to the database');
+});
+
+
+
+// Route to handle registration
+// This route will be called when the user submits the registration form
+// The form data will be sent as a POST request to this route
+app.post('/register', (req, res) => {
+    // Updated to match the form field names from HTML
+    const { email, firstName, lastName, username, password, confirmPassword } = req.body;
+    
+    // Log the request body to help with debugging
+    console.log("Registration attempt with data:", req.body);
+
+    // Check for both email and username
+    con.query('SELECT email, username FROM users WHERE email = ? OR username = ?', [email, username], async (error, result) => {
+        if (error) {
+            console.log(error);
+            return res.status(500).json({
+                success: false,
+                message: "Database error. Please try again."
+            });
+        }
+
+        if (password !== confirmPassword) {
+            return res.status(400).json({
+                success: false,
+                message: "Passwords do not match"
+            });
+        }
+
+        if (result.length > 0) {
+            // checking if email or username already exists
+            const emailExists = result.some(user => user.email === email);
+            const usernameExists = result.some(user => user.username === username);
+
+            //If both email and username exist
+            if (emailExists && usernameExists) {
+                return res.status(409).json({
+                    success: false,
+                    message: "That email and username are already in use"
+                });
+            } else if (emailExists) {
+                return res.status(409).json({
+                    success: false,
+                    message: "That email is already in use"
+                });
+            } else {
+                return res.status(409).json({
+                    success: false,
+                    message: "That username is already in use"
+                });
+            }
+        }
+
+        // Hash the password
+        let hashedPassword = await bcrypt.hash(password, 10);
+
+        con.query('INSERT INTO users SET ?', {
+            firstName: firstName,
+            lastName: lastName,
+            username: username,
+            email: email,
+            password: hashedPassword
+        }, (error, results) => {
+            if (error) {
+                console.log("Database error during insertion:", error);
+                return res.status(500).json({
+                    success: false,
+                    message: "Error registering user"
+                });
+            }
+            
+            console.log("User registration successful, inserted ID:", results.insertId);
+            return res.status(201).json({
+                success: true,
+                message: "Registration successful",
+                redirectUrl: '/login.html'
+            });
+        });
+    });
+});
+
+
+
+
+
+
+// Route to handle login
+// This route will be called when the user submits the login form
+app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+
+    // Log the request body to help with debugging
+    console.log("Login attempt with data:", req.body);
+
+    const sql = 'SELECT * FROM users WHERE (username = ? OR email = ?)';
+
+    con.query(sql, [username, username], async (error, results) => {
+        if (error) {
+            console.log("Database error during login:", error);
+            return res.status(500).json({
+                success: false,
+                message: "Database error. Please try again."
+            });
+        }
+
+        if (results.length === 0) {
+            return res.status(401).json({
+                success: false,
+                message: "Invalid username or email"
+            });
+        }
+
+        const user = results[0];
+        bcrypt.compare(password, user.password, (error, result) => {
+            if (error) {
+                console.log("Error comparing passwords:", error);
+                return res.status(500).json({
+                    status: error,
+                    message: "Error during password comparison"
+                });
+            }
+
+            if (result) {
+                // Passwords match
+                console.log("Login successful for user:", user.username);
+                return res.status(200).json({
+                    success: true,
+                    message: "Login successful",
+                    redirectUrl: '/' // Changed from '/index.html' to '/'
+                });
+            } else {
+                // Passwords do not match
+                console.log("Invalid password for user:", user.username);
+                return res.status(401).json({
+                    success: false,
+                    message: "Invalid password"
+                });
+            }
+        })
+    })
+});
+
+
+
+
+
+// Check file type
+function checkFileType(file, cb) {
+    const filetypes = /jpeg|jpg|png/;
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = filetypes.test(file.mimetype);
+
+    if (mimetype && extname) {
+        return cb(null, true);
+    } else {
+        cb('Error: Images Only!');
+    }
+}
+
+// Set storage engine
+const storage = multer.diskStorage({
+    destination: './public/uploads/',
+    filename: function(req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
+
+// Initialize upload
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 2000000 }, // Limit file size to 1MB
+    fileFilter: function(req, file, cb) {
+        checkFileType(file, cb);
+    }
+}).single('blog-image');
+
+
+
+
+//Route to handle blog post submission
+app.post('/write-blog', (req, res) => {
+    upload(req, res, (err) => {
+        if (err) {
+            console.log("Error during file upload:", err);
+            return res.status(400).json({
+                success: false,
+                message: err
+            });
+        }
+
+        const { title, description, image, content } = req.body;
+
+        const imageUrl = `/uploads/${req.file.filename}`;
+        const created_at = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+        const sql = 'INSERT INTO blogs_data (title, description, content, imageURL, createdAt) VALUES (?, ?, ?, ?, ?)';
+
+        con.query(sql, [title, description, content, imageUrl, created_at], (error, results) => {
+            if (error) {
+                console.log("Database error during blog post insertion:", error);
+                return res.status(500).json({
+                    success: false,
+                    message: "Error saving blog post"
+                });
+            }
+
+            console.log("Blog post saved successfully with ID:", results.insertId);
+            return res.status(201).json({
+                success: true,
+                message: "Blog post saved successfully",
+                redirectUrl: '/index.html'
+            });
+        });
+
+    })
+});
+
+
+
+
+// Middleware to check if the user is logged in
+const checkLoggedIn = (req, res, next) => {
+    // In a real application, you would check if the user has a valid session
+    // For now, we'll use a simple check (this would be replaced with proper session validation)
+    const isLoggedIn = req.headers.authorization || req.cookies.isLoggedIn;
+    
+    if (isLoggedIn) {
+        next(); // User is logged in, proceed to the next middleware/route handler
+    } else {
+        // User is not logged in, redirect to login page
+        res.redirect('/login');
+    }
+};
+
+// Route to serve the login.html file when /login is requested
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public', 'login.html'));
+});
+
+// Route to serve the register.html file when /register is requested 
+app.get('/register', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public', 'register.html'));
+});
+
+// Route to serve the write-blog.html file when /write-blog is requested
+// We'll remove the middleware to allow page access, but control content via JavaScript
+app.get('/write-blog', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public', 'write-blog.html'));
+});
+
+// Route to serve the profile.html file when /profile is requested
+// Protect this route with the checkLoggedIn middleware
+app.get('/profile', checkLoggedIn, (req, res) => {
+    res.sendFile(path.join(__dirname, '../public', 'profile.html'));
+});
+
+
+
+
+
+const port = 3000; // Port for the server to listen on
+
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});
