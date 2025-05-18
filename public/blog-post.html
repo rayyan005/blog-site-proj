@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Post - the blog site</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gloock&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/footer.css">
+    <link rel="stylesheet" href="/css/blog-post.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/" class="logo"><h3>the blog site</h3></a>
+            <input type="search" placeholder="Search for a blog" id="search-bar" />
+            <div class="nav-buttons">
+                <a href="/write-blog"><button type="button" id="write-button">WRITE</button></a>
+                <a href="/login"><button type="button" id="log-in-button">LOG IN</button></a>
+                <a href="/register"><button type="button" id="sign-up-button">SIGN UP</button></a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="blog-post-container">
+        <article class="blog-content">
+            <h1 id="blog-title" class="blog-title">Blog Post Title</h1>
+            <p id="blog-description" class="blog-description">A captivating description of the blog post that gives readers an overview of what to expect from the article.</p>
+            
+            <div class="blog-image-container">
+                <img id="blog-image" src="/images/placeholder.jpg" alt="Blog post featured image" class="blog-image">
+            </div>
+            
+            <div class="blog-meta">
+                <span class="blog-author">By <a id="blog-author-link" href="#" class="author-link"><span id="blog-author-name">Author Name</span></a></span>
+                <span class="blog-divider">•</span>
+                <span id="blog-date" class="blog-date">June 15, 2023</span>
+            </div>
+            
+            <div id="blog-content" class="blog-body">
+                <p>This is where the main content of the blog will appear. The text will be loaded dynamically from the database when a specific blog post is requested.</p>
+                <p>Each paragraph will be properly formatted and the content will maintain consistent styling with the rest of the site, using the Inter font for readability.</p>
+                <p>The blog might include formatted text such as <strong>bold text</strong>, <em>italicized text</em>, or even <a href="#">links to other resources</a>.</p>
+            </div>
+        </article>
+        
+        <section class="comments-section">
+            <h2 class="comments-title">Comments</h2>
+            <div id="comments-container" class="comments-container">
+                <p class="no-comments-message">There are no comments yet. Be the first to share your thoughts!</p>
+            </div>
+            
+            <div class="add-comment-section">
+                <h3 class="add-comment-title">Add a Comment</h3>
+                <form id="comment-form" class="comment-form">
+                    <textarea id="comment-text" name="comment" placeholder="Write your comment here..." required></textarea>
+                    <button type="submit" id="submit-comment" class="submit-comment-btn">Post Comment</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/login">Sign In</a></li>
+                    <li><a href="/register">Register</a></li>
+                    <li><a href="/write-blog">Write a Blog</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 The Blog Site. All rights reserved. The content on this site is protected by copyright law and may not be reproduced without permission.</p>
+        </div>
+    </footer>
+
+    <script src="/js/nav.js"></script>
+    <script src="/js/blog-post.js"></script>
+</body>
+</html>

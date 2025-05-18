@@ -1,0 +1,235 @@
+body {
+    margin: 0;
+    font-family: "Inter", sans-serif;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* Main content container */
+.blog-post-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Blog title styling */
+.blog-title {
+    font-family: "Geist", sans-serif;
+    font-size: 2.5rem;
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    line-height: 1.2;
+}
+
+/* Blog description styling */
+.blog-description {
+    font-family: "Inter", sans-serif;
+    font-size: 1.2rem;
+    font-weight: 400;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 30px;
+    color: #555;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Blog image container and styling */
+.blog-image-container {
+    margin: 20px auto 30px;
+    text-align: center;
+}
+
+.blog-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Blog meta information (author, date) */
+.blog-meta {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.blog-author {
+    margin-right: 5px;
+}
+
+.blog-divider {
+    margin: 0 8px;
+}
+
+.blog-date {
+    margin-left: 5px;
+}
+
+.author-link {
+    color: #0065F3;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.author-link:hover {
+    text-decoration: underline;
+}
+
+/* Blog content styling */
+.blog-body {
+    margin-bottom: 50px;
+    font-size: 1.1rem;
+    line-height: 1.7;
+}
+
+.blog-body p {
+    margin-bottom: 20px;
+}
+
+.blog-body a {
+    color: #0065F3;
+    text-decoration: none;
+}
+
+.blog-body a:hover {
+    text-decoration: underline;
+}
+
+.blog-body strong {
+    font-weight: 600;
+}
+
+/* Comments section styling */
+.comments-section {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid #ddd;
+}
+
+.comments-title {
+    font-family: "Gloock", serif;
+    font-size: 1.75rem;
+    margin-bottom: 20px;
+}
+
+.comments-container {
+    margin-bottom: 30px;
+}
+
+.no-comments-message {
+    color: #777;
+    font-style: italic;
+    text-align: center;
+    padding: 30px 0;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+/* Add comment section styling */
+.add-comment-section {
+    margin-top: 30px;
+}
+
+.add-comment-title {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 1.25rem;
+    margin-bottom: 15px;
+}
+
+.comment-form {
+    display: flex;
+    flex-direction: column;
+}
+
+#comment-text {
+    min-height: 100px;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: "Inter", sans-serif;
+    resize: vertical;
+}
+
+.submit-comment-btn {
+    align-self: flex-end;
+    background-color: #0065F3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.submit-comment-btn:hover {
+    background-color: #0056cc;
+}
+
+/* Comment styling (will be used dynamically when comments are added) */
+.comment {
+    padding: 15px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.comment-author {
+    font-weight: 600;
+    color: #333;
+}
+
+.comment-date {
+    color: #888;
+    font-size: 0.85rem;
+}
+
+.comment-text {
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Responsive design */
+@media screen and (max-width: 768px) {
+    .blog-post-container {
+        padding: 15px;
+    }
+    
+    .blog-title {
+        font-size: 2rem;
+    }
+    
+    .blog-description {
+        font-size: 1.1rem;
+    }
+    
+    .blog-body {
+        font-size: 1rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .blog-title {
+        font-size: 1.75rem;
+    }
+    
+    .blog-description {
+        font-size: 1rem;
+    }
+    
+    .submit-comment-btn {
+        width: 100%;
+        padding: 12px;
+    }
+}
