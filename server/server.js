@@ -144,7 +144,7 @@ app.post('/login', (req, res) => {
     // Log the request body to help with debugging
     console.log("Login attempt with data:", req.body);
 
-    const sql = 'SELECT * FROM users WHERE (username = ? OR email = ?)';
+    const sql = 'SELECT * FROM users WHERE username = ?';
 
     con.query(sql, [username, username], async (error, results) => {
         if (error) {
@@ -199,7 +199,7 @@ app.post('/login', (req, res) => {
 
 // Check file type
 function checkFileType(file, cb) {
-    const filetypes = /jpeg|jpg|png/;
+    const filetypes = /jpeg|jpg|png|webp/;
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
     const mimetype = filetypes.test(file.mimetype);
 
@@ -243,6 +243,15 @@ app.post('/write-blog', (req, res) => {
 
         const { userId, title, description, image, content } = req.body;
 
+
+        // Generate a slug: lowercase, remove special chars, replace spaces with hyphens
+        const slug = title
+            .toLowerCase()
+            .replace(/[^a-z0-9\s-]/g, '') // Remove all non-alphanumeric except spaces and hyphens
+            .replace(/\s+/g, '-')         // Replace spaces with hyphens
+            .replace(/-+/g, '-');         // Replace multiple hyphens with single
+
+
         // Check if userId exists
         if (!userId) {
             return res.status(401).json({
@@ -262,15 +271,12 @@ app.post('/write-blog', (req, res) => {
 
 
 
-
-
-
         const imageUrl = `/uploads/${req.file.filename}`;
         const created_at = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
-        const sql = 'INSERT INTO blogs_data (userID, title, description, content, imageURL, createdAt) VALUES (?, ?, ?, ?, ?, ?)';
+        const sql = 'INSERT INTO blogs_data (userID, title, slug, description, content, imageURL, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?)';
 
-        con.query(sql, [userId, title, description, content, imageUrl, created_at], (error, results) => {
+        con.query(sql, [userId, title, slug, description, content, imageUrl, created_at], (error, results) => {
             if (error) {
                 console.log("Database error during blog post insertion:", error);
                 return res.status(500).json({
@@ -397,15 +403,16 @@ app.get('/profile', (req, res) => {
 app.get('/blog/:slug', (req, res) => {
     const slug = req.params.slug;
     
-    // Query to find blog by slug
+    // Update the query to use the stored slug column
     const sql = `
-        SELECT b.id, b.title, b.description, b.content, b.imageURL, b.createdAt, 
-               u.username, u.firstName, u.lastName 
-        FROM blogs_data b
-        JOIN users u ON b.userID = u.id
-        WHERE LOWER(REPLACE(REPLACE(b.title, ' ', '-'), ',', '')) = ?`;
+    SELECT b.id, b.title, b.description, b.content, b.imageURL, b.createdAt, 
+           u.username, u.firstName, u.lastName 
+    FROM blogs_data b
+    JOIN users u ON b.userID = u.id
+    WHERE b.slug = ?`;
     
-    con.query(sql, [slug.toLowerCase()], (error, results) => {
+    
+    con.query(sql, [slug], (error, results) => {
         if (error) {
             console.log("Error fetching blog:", error);
             return res.status(500).send('Database error');
@@ -667,51 +674,6 @@ app.get('/search', (req, res) => {
 app.get('/search-results', (req, res) => {
     res.sendFile(path.join(__dirname, '../public', 'search-results.html'));
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 const port = 3000; // Port for the server to listen on
