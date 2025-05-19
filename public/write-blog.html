@@ -47,7 +47,10 @@
             <h1>Write Your Blog</h1>
             <p class="subtitle">Share your thoughts with the world</p>
 
-            <form id="blog-form" action="/write-blog" method="post">
+            <form id="blog-form" action="/write-blog" method="post" enctype="multipart/form-data">
+
+                <input type="hidden" id="userId" name="userId">
+
                 <div class="form-group">
                     <label for="blog-title">Blog Title</label>
                     <input type="text" id="blog-title" name="title" placeholder="Enter a catchy title" required>
@@ -61,7 +64,7 @@
                 <div class="form-group">
                     <label for="blog-image">Main Image</label>
                     <div class="image-upload-container">
-                        <input type="file" id="blog-image" name="image" accept="image/*" required>
+                        <input type="file" id="blog-image" name="blog-image" accept="image/*" required>
                         <div class="image-preview-container">
                             <p class="upload-instruction">Upload your main image (will be used as thumbnail)</p>
                             <img id="image-preview" src="#" alt="Preview" style="display: none;">
@@ -119,5 +122,6 @@
     </footer>
 
     <script src="js/nav.js"></script>
+    <script src="js/write-blog.js"></script>
 </body>
 </html>
