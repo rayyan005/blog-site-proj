@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{#if error}}Blog Not Found{{else}}{{blog.title}}{{/if}} - the blog site</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gloock&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/footer.css">
+    <link rel="stylesheet" href="/css/blog-post.css">
+    {{#unless error}}
+    <meta property="og:title" content="{{blog.title}}">
+    <meta property="og:description" content="{{blog.description}}">
+    <meta property="og:image" content="{{blog.imageUrl}}">
+    {{/unless}}
+</head>
+<body>
+    {{> header}}
+
+    <main class="blog-post-container">
+        {{#if error}}
+            <div class="error-container">
+                <h1 class="error-title">Blog Post Not Found</h1>
+                <p class="error-message">{{message}}</p>
+                <p>The blog post you're looking for doesn't exist or may have been removed.</p>
+                <a href="/" class="home-link">Return to Home Page</a>
+            </div>
+        {{else}}
+            <article class="blog-content">
+                <h1 id="blog-title" class="blog-title">{{blog.title}}</h1>
+                <p id="blog-description" class="blog-description">{{blog.description}}</p>
+                
+                <div class="blog-image-container">
+                    <img id="blog-image" src="{{blog.imageUrl}}" alt="{{blog.title}}" class="blog-image">
+                </div>
+                
+                <div class="blog-meta">
+                    <span class="blog-author">By <a id="blog-author-link" href="/profile/{{blog.username}}" class="author-link">
+                        <span id="blog-author-name">{{blog.author}}</span></a></span>
+                    <span class="blog-divider">•</span>
+                    <span id="blog-date" class="blog-date">{{blog.date}}</span>
+                </div>
+                
+                <div id="blog-content" class="blog-body">
+                    {{{blog.content}}}
+                </div>
+            </article>
+            
+            <section class="comments-section">
+                <h2 class="comments-title">Comments</h2>
+                <div id="comments-container" class="comments-container">
+                    <p class="no-comments-message">There are no comments yet. Be the first to share your thoughts!</p>
+                </div>
+                
+                <div id="comment-form-section" class="add-comment-section">
+                    <h3 class="add-comment-title">Add a Comment</h3>
+                    <div id="login-prompt" class="login-message" style="display: none;">
+                        <p>You need to be logged in to post a comment. <a href="/login" class="login-link">Log in here</a>.</p>
+                    </div>
+                    <form id="comment-form" class="comment-form" action="/comments" method="POST">
+                        <input type="hidden" id="blog-id" value="{{blog.id}}">
+                        <textarea id="comment-text" name="comment" placeholder="Write your comment here..." required></textarea>
+                        <button type="submit" id="submit-comment" class="submit-comment-btn">Post Comment</button>
+                    </form>
+                </div>
+            </section>
+        {{/if}}
+    </main>
+
+    {{> footer}}
+
+    <script src="/js/nav.js"></script>
+    <script src="/js/comments.js"></script>
+</body>
+</html>

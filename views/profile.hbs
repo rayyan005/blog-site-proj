@@ -54,16 +54,18 @@
                 {{#if blogs.length}}
                     {{#each blogs}}
                     <div class="blog-item">
-                        <div class="blog-image">
-                            <img src="{{this.imageUrl}}" alt="{{this.title}}" />
-                        </div>
-                        <div class="blog-content">
-                            <h3 class="blog-title">{{this.title}}</h3>
-                            <p class="blog-excerpt">{{this.summary}}</p>
-                            <div class="blog-meta">
-                                <span class="blog-date">{{this.formattedDate}}</span>
+                        <a href="/blog-post/{{this.id}}" class="blog-link">
+                            <div class="blog-image">
+                                <img src="{{this.imageUrl}}" alt="{{this.title}}" />
                             </div>
-                        </div>
+                            <div class="blog-content">
+                                <h3 class="blog-title">{{this.title}}</h3>
+                                <p class="blog-excerpt">{{this.summary}}</p>
+                                <div class="blog-meta">
+                                    <span class="blog-date">{{this.formattedDate}}</span>
+                                </div>
+                            </div>
+                        </a>
                     </div>
                     {{/each}}
                     
