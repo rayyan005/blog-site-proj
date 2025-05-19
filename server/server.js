@@ -499,42 +499,98 @@ function formatBlogContent(content) {
 
 
 app.post('/comments', (req, res) => {
-
     const { userId, blogId, comment } = req.body;
 
-    // Check if userId exists
-    if (!userId) {
+    // Comprehensive validation
+    if (!userId || isNaN(parseInt(userId))) {
+        console.log("Comment attempt without valid userId:", userId);
         return res.status(401).json({
             success: false,
             message: "You must be logged in to post a comment"
         });
     }
 
+    if (!blogId || isNaN(parseInt(blogId))) {
+        return res.status(400).json({
+            success: false,
+            message: "Invalid blog ID"
+        });
+    }
 
-    // Create timestamp for the new comment
-    const createdAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    if (!comment || comment.trim() === '') {
+        return res.status(400).json({
+            success: false,
+            message: "Comment cannot be empty"
+        });
+    }
 
-
-    const sql = 'INSERT INTO comments_data (userID, blogID, comment, createdAt) VALUES (?, ?, ?, ?)';
-
-    con.query(sql, [userId, blogId, comment, createdAt], (error, results) => {
-        if (error) {
-            console.log("Database error during comment insertion:", error);
+    // First check if the user exists
+    const checkUserSql = 'SELECT id, username, firstName, lastName FROM users WHERE id = ?';
+    
+    con.query(checkUserSql, [userId], (userError, userResults) => {
+        if (userError) {
+            console.log("Database error checking user:", userError);
             return res.status(500).json({
                 success: false,
-                message: "Error saving comment"
+                message: "Error verifying user identity"
             });
         }
 
-        console.log("Comment saved successfully with ID:", results.insertId);
-        return res.status(201).json({
-            success: true,
-            message: "Comment saved successfully"
+        if (userResults.length === 0) {
+            console.log("Comment attempt with non-existent userId:", userId);
+            return res.status(401).json({
+                success: false,
+                message: "Invalid user. Please log in again."
+            });
+        }
+
+        // Now check if the blog exists
+        const checkBlogSql = 'SELECT id FROM blogs_data WHERE id = ?';
+        
+        con.query(checkBlogSql, [blogId], (blogError, blogResults) => {
+            if (blogError) {
+                console.log("Database error checking blog:", blogError);
+                return res.status(500).json({
+                    success: false,
+                    message: "Error verifying blog existence"
+                });
+            }
+
+            if (blogResults.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Blog post not found"
+                });
+            }
+
+            // All checks passed, now save the comment
+            const user = userResults[0];
+            const createdAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
+            
+            const sql = 'INSERT INTO comments_data (userID, blogID, comment, createdAt) VALUES (?, ?, ?, ?)';
+
+            con.query(sql, [userId, blogId, comment, createdAt], (error, results) => {
+                if (error) {
+                    console.log("Database error during comment insertion:", error);
+                    return res.status(500).json({
+                        success: false,
+                        message: "Error saving comment"
+                    });
+                }
+
+                console.log("Comment saved successfully with ID:", results.insertId);
+                return res.status(201).json({
+                    success: true,
+                    message: "Comment saved successfully",
+                    commentId: results.insertId,
+                    username: user.username,
+                    authorName: `${user.firstName} ${user.lastName}`,
+                    createdAt: createdAt
+                });
+            });
         });
     });
 });
-
-
 
 // Add this route to your server.js to fetch comments for a blog post
 app.get('/api/comments/:blogId', (req, res) => {
@@ -575,6 +631,41 @@ app.get('/api/comments/:blogId', (req, res) => {
             comments: comments
         });
     });
+});
+
+
+app.get('/search', (req, res) => {
+
+    const { query } = req.query;
+
+    const sql = `
+        SELECT id, title, description, imageURL 
+        FROM blogs_data 
+        WHERE title LIKE ? OR description LIKE ? OR content LIKE ?
+        ORDER BY createdAt DESC
+        LIMIT 20`;
+
+    const searchPattern = `%${query}%`;
+    
+    con.query(sql, [searchPattern, searchPattern, searchPattern], (error, results) => {
+        if (error) {
+            console.log("Error searching blogs:", error);
+            return res.status(500).json({
+                success: false,
+                message: "Error searching blogs"
+            });
+        }
+        
+        return res.status(200).json({
+            success: true,
+            results: results
+        });
+    });
+});
+
+// Add a route to serve the search results page
+app.get('/search-results', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public', 'search-results.html'));
 });
 
 

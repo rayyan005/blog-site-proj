@@ -1,0 +1,132 @@
+/* Search Results Page Styling */
+body {
+    font-family: "Inter", sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    color: #333;
+    line-height: 1.6;
+}
+
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+.search-container {
+    width: 100%;
+}
+
+.search-container h1 {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+#search-query-display {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 1rem;
+}
+
+#query-text {
+    font-weight: bold;
+}
+
+hr {
+    border: none;
+    height: 1px;
+    background-color: #e0e0e0;
+    margin: 1.5rem 0;
+}
+
+#results-count {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+#search-results {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.result-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.result-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.result-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.result-card-content {
+    padding: 1.2rem;
+}
+
+.result-card-content h3 {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 1.3rem;
+    margin: 0 0 0.7rem 0;
+    line-height: 1.3;
+}
+
+.result-card-content p {
+    font-size: 0.95rem;
+    color: #666;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.no-results, .loading-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+}
+
+.no-results p, .loading-results p {
+    font-size: 1.1rem;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+    main {
+        padding: 1.5rem 1rem;
+    }
+    
+    .search-container h1 {
+        font-size: 2rem;
+    }
+    
+    #search-results {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .search-container h1 {
+        font-size: 1.8rem;
+    }
+    
+    #search-results {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+    }
+}
