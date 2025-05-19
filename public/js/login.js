@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Store login information in localStorage
                     localStorage.setItem('isLoggedIn', 'true');
                     localStorage.setItem('username', username);
+                    localStorage.setItem('userId', data.userId); // Store user ID if available
                     
                     showMessage("Login successful! Redirecting...", 'success');
                     

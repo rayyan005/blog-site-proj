@@ -18,6 +18,20 @@ document.addEventListener("DOMContentLoaded", function() {
         handleWriteBlogPageAccess(isLoggedIn);
     }
     
+    // Add event listener to search bar
+    const searchBar = document.getElementById('search-bar');
+    if (searchBar) {
+        searchBar.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const query = this.value.trim();
+                if (query) {
+                    // Redirect to search results page with the query
+                    window.location.href = `/search-results?query=${encodeURIComponent(query)}`;
+                }
+            }
+        });
+    }
+    
     // Function to update nav for logged in users
     function updateNavForLoggedInUser(navContainer, username) {
         // Clear existing buttons
@@ -27,8 +41,8 @@ document.addEventListener("DOMContentLoaded", function() {
         const writeButton = createButton('write-button', 'WRITE', '/write-blog');
         navContainer.appendChild(writeButton);
         
-        // Create profile button
-        const profileButton = createButton('profile-button', 'PROFILE', '/profile');
+        // Create profile button with username in the URL
+        const profileButton = createButton('profile-button', 'PROFILE', `/profile/${username}`);
         navContainer.appendChild(profileButton);
         
         // Create logout button
@@ -61,6 +75,7 @@ document.addEventListener("DOMContentLoaded", function() {
         // Clear user session data
         localStorage.removeItem('isLoggedIn');
         localStorage.removeItem('username');
+        localStorage.removeItem('userId');
         
         // Redirect to home page
         window.location.href = '/';
