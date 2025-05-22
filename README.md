@@ -58,15 +58,16 @@ A modern, full-stack blogging platform built with Node.js, Express, MySQL, and H
 ## Screenshots
 
 > ![Home Page](./screenshots/home.png)
-> ![Blog Post](./screenshots/blog-post.png)
+> ![Blog Post](./screenshots/blog_post.png)
 > ![Write Blog](./screenshots/write-blog.png)
 > ![Profile](./screenshots/profile.png)
+> ![Login](./screenshots/login.png)
+> ![Register](./screenshots/register.png)
 
 ## Why This Project?
 
 - **End-to-End Ownership:** Designed and implemented both backend and frontend, including authentication, file uploads, and dynamic rendering.
 - **Modern Web Practices:** Uses RESTful APIs, responsive design, and clean code structure.
-- **Recruiter-Friendly:** Demonstrates practical skills in full-stack web development, database design, and user experience.
 
 ## License
 
