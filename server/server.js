@@ -241,8 +241,8 @@ app.post('/write-blog', (req, res) => {
             });
         }
 
-        const { userId, title, description, image, content } = req.body;
-
+        const { userId, title, description, content } = req.body;
+        console.log("Received userId:", userId); // Add this for debugging
 
         // Generate a slug: lowercase, remove special chars, replace spaces with hyphens
         const slug = title
@@ -252,7 +252,7 @@ app.post('/write-blog', (req, res) => {
             .replace(/-+/g, '-');         // Replace multiple hyphens with single
 
 
-        // Check if userId exists
+        // Check if userId exists and is valid
         if (!userId) {
             return res.status(401).json({
                 success: false,
@@ -260,40 +260,54 @@ app.post('/write-blog', (req, res) => {
             });
         }
 
-
-        // Check if a file was uploaded
-        if (!req.file) {
-            return res.status(400).json({
-                success: false,
-                message: "No image file was uploaded"
-            });
-        }
-
-
-
-        const imageUrl = `/uploads/${req.file.filename}`;
-        const created_at = new Date().toISOString().slice(0, 19).replace('T', ' ');
-
-        const sql = 'INSERT INTO blogs_data (userID, title, slug, description, content, imageURL, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?)';
-
-        con.query(sql, [userId, title, slug, description, content, imageUrl, created_at], (error, results) => {
+        // First verify the user exists
+        con.query('SELECT id FROM users WHERE id = ?', [userId], (error, userResults) => {
             if (error) {
-                console.log("Database error during blog post insertion:", error);
+                console.log("Error verifying user:", error);
                 return res.status(500).json({
                     success: false,
-                    message: "Error saving blog post"
+                    message: "Error verifying user"
                 });
             }
 
-            console.log("Blog post saved successfully with ID:", results.insertId);
-            return res.status(201).json({
-                success: true,
-                message: "Blog post saved successfully",
-                redirectUrl: '/'
+            if (userResults.length === 0) {
+                return res.status(401).json({
+                    success: false,
+                    message: "Invalid user ID. Please log in again."
+                });
+            }
+
+            // Check if a file was uploaded
+            if (!req.file) {
+                return res.status(400).json({
+                    success: false,
+                    message: "No image file was uploaded"
+                });
+            }
+
+            const imageUrl = `/uploads/${req.file.filename}`;
+            const created_at = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+            const sql = 'INSERT INTO blogs_data (userID, title, slug, description, content, imageURL, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?)';
+
+            con.query(sql, [userId, title, slug, description, content, imageUrl, created_at], (error, results) => {
+                if (error) {
+                    console.log("Database error during blog post insertion:", error);
+                    return res.status(500).json({
+                        success: false,
+                        message: "Error saving blog post"
+                    });
+                }
+
+                console.log("Blog post saved successfully with ID:", results.insertId);
+                return res.status(201).json({
+                    success: true,
+                    message: "Blog post saved successfully",
+                    redirectUrl: '/'
+                });
             });
         });
-
-    })
+    });
 });
 
 
