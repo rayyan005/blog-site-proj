@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Write Your Blog - the blog site</title>
+    <title>Write Blog - the blog site</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
@@ -14,7 +14,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/header.css">
-    <link rel="stylesheet" href="css/footer.css">
     <link rel="stylesheet" href="css/write-blog.css">
 </head>
 <body>
@@ -31,95 +30,56 @@
     </header>
 
     <main>
-        <!-- Add a login message that will be shown to non-logged in users -->
-        <div id="login-message" style="display: none;" class="login-message-container">
+        <!-- This section shows when user is not logged in -->
+        <div class="login-message-container" style="display: none;">
             <div class="login-message">
-                <h2>You need to be logged in to write a blog</h2>
-                <p>Please log in to your account to access the blog writing feature.</p>
+                <h2>You need to login to write a blog</h2>
+                <p>Please login or register to start writing your own blog posts.</p>
                 <div class="login-buttons">
-                    <a href="/login" class="login-btn">Log In</a>
+                    <a href="/login" class="login-btn">Login</a>
                     <a href="/register" class="register-btn">Register</a>
                 </div>
             </div>
         </div>
 
-        <div class="write-blog-container" id="write-blog-content">
+        <!-- This section shows when user is logged in -->
+        <div class="write-blog-container" style="display: none;">
             <h1>Write Your Blog</h1>
             <p class="subtitle">Share your thoughts with the world</p>
 
-            <form id="blog-form" action="/write-blog" method="post" enctype="multipart/form-data">
-
-                <input type="hidden" id="userId" name="userId">
-
+            <form id="blog-form">
                 <div class="form-group">
-                    <label for="blog-title">Blog Title</label>
+                    <label for="blog-title">Title</label>
                     <input type="text" id="blog-title" name="title" placeholder="Enter a catchy title" required>
                 </div>
-
+                
                 <div class="form-group">
-                    <label for="blog-summary">Summary / Description</label>
-                    <textarea id="blog-summary" name="description" placeholder="Write a short summary or description (100-150 words)" required></textarea>
+                    <label for="blog-description">Description</label>
+                    <textarea id="blog-description" name="description" placeholder="Write a brief description of your blog" required></textarea>
                 </div>
-
+                
                 <div class="form-group">
-                    <label for="blog-image">Main Image</label>
+                    <label for="blog-image">Featured Image</label>
                     <div class="image-upload-container">
-                        <input type="file" id="blog-image" name="blog-image" accept="image/*" required>
+                        <input type="file" id="blog-image" name="blog-image" class="hidden-file-input" accept="image/*" required>
                         <div class="image-preview-container">
-                            <p class="upload-instruction">Upload your main image (will be used as thumbnail)</p>
-                            <img id="image-preview" src="#" alt="Preview" style="display: none;">
+                            <p class="upload-instruction">Click to upload an image</p>
+                            <img id="image-preview" style="display: none;" alt="Preview">
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="form-group">
-                    <label for="blog-content">Blog Content</label>
-                    <div class="toolbar">
-                        <button type="button" class="tool-button" title="Bold"><strong>B</strong></button>
-                        <button type="button" class="tool-button" title="Italic"><em>I</em></button>
-                        <button type="button" class="tool-button" title="Underline"><u>U</u></button>
-                        <button type="button" class="tool-button" title="Heading">H</button>
-                        <button type="button" class="tool-button" title="List">•</button>
-                        <button type="button" class="tool-button" title="Link">🔗</button>
-                        <button type="button" class="tool-button" title="Image">📷</button>
-                    </div>
+                    <label for="blog-content">Content</label>
                     <textarea id="blog-content" name="content" placeholder="Write your blog content here..." required></textarea>
                 </div>
-
+                
                 <div class="button-group">
-                    <button type="button" id="save-draft-button">Save as Draft</button>
-                    <button type="submit" id="publish-button">Publish Blog</button>
+                    <button type="submit" id="publish-button">Publish</button>
                 </div>
             </form>
         </div>
     </main>
-
-    <footer>
-        <div class="footer-container">
-            <div class="footer-section">
-                <h4>Navigation</h4>
-                <ul>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/login">Sign In</a></li>
-                    <li><a href="/register">Register</a></li>
-                    <li><a href="/write-blog">Write a Blog</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-section">
-                <h4>Legal</h4>
-                <ul>
-                    <li><a href="#">Terms of Service</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Cookie Policy</a></li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="footer-bottom">
-            <p>&copy; 2025 The Blog Site. All rights reserved. The content on this site is protected by copyright law and may not be reproduced without permission.</p>
-        </div>
-    </footer>
 
     <script src="js/nav.js"></script>
     <script src="js/write-blog.js"></script>
